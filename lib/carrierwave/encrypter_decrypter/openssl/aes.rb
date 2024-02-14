@@ -6,7 +6,6 @@ module Openssl
       begin
         model = obj.model
         cipher = OpenSSL::Cipher.new("AES-#{Carrierwave::EncrypterDecrypter.configuration.key_size}-CBC")
-        cipher.padding = 1
         cipher.encrypt
         iv = model.iv || cipher.random_iv
         model.iv = iv
@@ -49,7 +48,6 @@ module Openssl
         end
 
         cipher = OpenSSL::Cipher.new("AES-#{Carrierwave::EncrypterDecrypter.configuration.key_size}-CBC")
-        cipher.padding = 1
         cipher.decrypt
         cipher.iv = model.iv
         cipher.key = model.key
