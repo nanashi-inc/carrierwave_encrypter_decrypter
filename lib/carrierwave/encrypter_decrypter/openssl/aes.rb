@@ -6,7 +6,6 @@ module Openssl
       begin
         model = obj.model
         cipher = OpenSSL::Cipher.new("AES-#{Carrierwave::EncrypterDecrypter.configuration.key_size}-CBC")
-        cipher.padding = 1
         cipher.encrypt
         iv = model.iv || cipher.random_iv
         model.iv = iv
@@ -27,7 +26,7 @@ module Openssl
             outf << cipher.final
           end
         end
-        FileUtils.mv(encrypted_file_path, original_file_path, force: true)
+        FileUtils.mv(encrypted_file_path, original_file_path, {:force => true})
       rescue Exception => e
         puts "****************************#{e.message}"
         puts "****************************#{e.backtrace.inspect}"
@@ -49,7 +48,6 @@ module Openssl
         end
 
         cipher = OpenSSL::Cipher.new("AES-#{Carrierwave::EncrypterDecrypter.configuration.key_size}-CBC")
-        cipher.padding = 1
         cipher.decrypt
         cipher.iv = model.iv
         cipher.key = model.key
@@ -68,7 +66,7 @@ module Openssl
         end
 
         if opts.key?(:resize) && opts.key?(:dest)
-          FileUtils.mv(original_file_path, opts[:dest], force: true)
+          FileUtils.mv(original_file_path, opts[:dest], {:force => true})
         end
       rescue Exception => e
         puts "****************************#{e.message}"
